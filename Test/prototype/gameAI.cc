@@ -1,3 +1,4 @@
+// g++ -std=c++11 -o ./exe/gameAI gameAI.cc
 #include <iostream>
 #include <time.h>
 
