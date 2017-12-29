@@ -16,7 +16,6 @@ public :
 private :
 	std::string gameName;
 	int stageNum;
-	char deleteDynamicAlloc;	// use 4bits for under pointers
 	int **privateList;		// privateList[player][idx]
 	int *commonList;		// commonList[idx]
 	int ***privateBoard;	// privateBoard[player][x][y]
@@ -24,7 +23,8 @@ private :
 public :
 	void initForGame();
 	void initForStage();
+	void flushMemory();
 	int oneStagePlay();
 	void oneTurnPlay();
-	bool gameLogic(ref int winner);
-}
+	bool gameLogic(int winner);
+};

@@ -16,14 +16,7 @@ GameJudge::GameJudge(string player1, string player2)
 
 GameJudge::~GameJudge()
 {
-	if(deleteDynamicAlloc & 1)
-		delete[] privateList;
-	if(deleteDynamicAlloc & 2)
-		delete[] commonList;
-	if(deleteDynamicAlloc & 4)
-		delete[] privateBoard;
-	if(deleteDynamicAlloc & 8)
-		delete[] commonBoard;
+	flushMemory();
 }
 
 //

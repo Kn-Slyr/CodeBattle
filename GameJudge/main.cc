@@ -1,4 +1,4 @@
-// g++ -std=c++11 -o ./exe/gameManager gameManager.cc
+// g++ -std=c++11 -o ./exe/gameJudger *.cc
 #include <iostream>
 #include <cstring>
 
@@ -19,8 +19,9 @@ void pipeClose();
 void mainGameLoop();
 int parsing();
 
-int main(void)
+int main(int argc, char *argv[])
 {
+
 	pipeInit();
 	mainGameLoop();
 	pipeClose();

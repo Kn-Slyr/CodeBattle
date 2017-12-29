@@ -5,9 +5,16 @@ void GameJudge::initForGame()
 	gameName = "RockScissorPaper";
 	stageNum = 1000;
 
-	deleteDynamicAlloc = 0;
-	deleteDynamicAlloc += 1;
-	privateList = new int[2][1000];
+	privateList = new int*[2];
+	for(int i=0; i<2; i++)
+		privateList[i] = new int[stageNum];
+}
+
+void GameJudge::flushMemory()
+{
+	for(int i=0; i<2; i++)
+		delete[] privateList[i];
+	delete[] privateList;
 }
 
 int GameJudge::oneStagePlay()
@@ -16,6 +23,7 @@ int GameJudge::oneStagePlay()
 	initForStage();
 	while(true)
 	{
+
 		// pipe
 		if(gameLogic(winner)) break;
 	}
@@ -28,7 +36,15 @@ void GameJudge::oneTurnPlay()
 }
 
 // return : true for stage end, false for continue
-bool gameLogic(ref int winner)
+bool GameJudge::gameLogic(int winner)
 {
 	return true;
+}
+
+bool parseForToss(string &msg)
+{
+}
+
+bool parseForGet(string &msg)
+{
 }
