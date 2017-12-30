@@ -1,10 +1,11 @@
+#include <cstdio>
+#include "NamedPipe.h"
 
 class GameLogic
 {
 private :
 	std::string gameName;
 
-	int stageNum;
 	int **privateList;		// privateList[player][idx]
 	int *commonList;		// commonList[idx]
 	int ***privateBoard;	// privateBoard[player][x][y]
@@ -16,12 +17,14 @@ private :
 public :
 	GameLogic(bool isAI1, bool isAI2)
 	{
+		printf("Load GameLogic...\n");
+
 		isAI[0] = isAI1;
 		isAI[1] = isAI2;
 
-		for(int i=0; 0<2; i++)
-			if(isAI[i])
-				pipe[i] = new NamedPipe(i, true);
+		for(int player=0; player<2; player++)
+			if(isAI[player])
+				pipe[player] = new NamedPipe(player, true);
 
 		allocMemory();
 		setGameInfo();
@@ -29,7 +32,13 @@ public :
 	}
 	~GameLogic()
 	{
+		printf("Close GameLogic...");
+
 		flushMemory();
+
+		for(int player=0; player<2; player++)
+			if(isAI[player])
+				delete pipe[player];
 	}
 
 	int gamePlay()
@@ -44,10 +53,22 @@ public :
 		return winner;
 	}
 
+	// initiate basic game data
 	virtual void setGameInfo();
+
+	// allocate memory at ***list or ***board
 	virtual void allocMemory();
+
+	// free memory for allocated in upper function
 	virtual void flushMemory();
+
+	// transfer initial information to players
 	virtual void zeroTurnPlay();
+
+	// one turn for each players
 	virtual void oneTurnPlay();
+
+	// check for game end
+	// return : true for stage end, false for continue
 	virtual bool gameLogic(int &winner);
 }

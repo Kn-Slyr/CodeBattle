@@ -1,5 +1,4 @@
 #include <string>
-#include "NamedPipe.h"
 
 class GameJudge
 {
