@@ -24,7 +24,10 @@ public :
 
 		for(int player=0; player<2; player++)
 			if(isAI[player])
+			{
 				pipe[player] = new NamedPipe(player, true);
+				pipe[player]->get();	// @@ wait for AI loading
+			}
 
 		allocMemory();
 		setGameInfo();

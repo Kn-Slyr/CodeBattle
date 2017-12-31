@@ -113,13 +113,22 @@ public :
 		return false;
 	}
 
+	// message's format is "turnCount,enemy's last weapon"
 	string parseForToss(int player)
 	{
-		return "";
+		char msg[50];
+		snprintf(msg, sizeof(msg),
+			"%d,%d", stageIdx, privateList[!player][stageIdx-1])
+		return string(msg);
 	}
 
+	// this game's msg is only one char(0, 1, 2)
+	// 0 : rock, 1 : scissor, 2 : paper
 	bool parseForGet(string &msg, int &weapon)
 	{
+		weapon = msg[0] - '0';
+		if(weapon < 0 || weapon > 2)
+			return false;
 		return true;
 	}
 }

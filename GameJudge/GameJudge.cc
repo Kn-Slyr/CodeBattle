@@ -5,12 +5,14 @@
 using namespace std;
 
 // init for common values
-GameJudge::GameJudge(string &player1, string &player2)
+GameJudge::GameJudge(string player1, string player2)
 {
 	srand(time(NULL));
 
 	player[0] = player1;
+	isAI[0] = player[1] == 'A';
 	player[1] = player2;
+	isAI[1] = player[2] == 'A';
 	winCount[0] = winCount[1] = 0;
 }
 
@@ -24,6 +26,7 @@ int GameJudge::mainGameLoop()
 {
 	for(int stg=0; stg<stageNum; stg++)
 	{
+		
 		gameLogic = new RockScissorPaper();
 		winCount[gameLogic.gamePlay()]++;
 		delete gameLogic;
