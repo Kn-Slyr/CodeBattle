@@ -1,3 +1,6 @@
+#ifndef __NAMED_PIPE_H__
+#define __NAMED_PIPE_H__
+
 #include <cstdio>
 #include <string>
 #include <cstring>
@@ -18,8 +21,8 @@ private :
 public :
 	NamedPipe(int playerNum, bool _isJudger);
 	~NamedPipe();
-	void toss(string &msg);
-	void get(string &msg);
+	void toss(string msg);
+	void getMsg(string msg);
 
 	static void makeFifoFile(int playerNum)
 	{
@@ -32,3 +35,5 @@ public :
 		}
 	}
 };
+
+#endif

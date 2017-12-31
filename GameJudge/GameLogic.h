@@ -1,9 +1,12 @@
+#ifndef __GAME_LOGIC_H__
+#define __GAME_LOGIC_H__
+
 #include <cstdio>
 #include "NamedPipe.h"
 
 class GameLogic
 {
-private :
+protected :
 	std::string gameName;
 
 	int **privateList;		// privateList[player][idx]
@@ -25,19 +28,16 @@ public :
 		for(int player=0; player<2; player++)
 			if(isAI[player])
 			{
+				string tmp;
+				NamedPipe::makeFifoFile(player);
 				pipe[player] = new NamedPipe(player, true);
-				pipe[player]->get();	// @@ wait for AI loading
+				pipe[player]->getMsg(tmp);	// wait for AI load
 			}
-
-		allocMemory();
-		setGameInfo();
-
 	}
+
 	~GameLogic()
 	{
 		printf("Close GameLogic...");
-
-		flushMemory();
 
 		for(int player=0; player<2; player++)
 			if(isAI[player])
@@ -55,23 +55,30 @@ public :
 		}
 		return winner;
 	}
-
+	
+private :
 	// initiate basic game data
-	virtual void setGameInfo();
+	virtual void setGameInfo() = 0;
 
 	// allocate memory at ***list or ***board
-	virtual void allocMemory();
+	virtual void allocMemory() = 0;
 
 	// free memory for allocated in upper function
-	virtual void flushMemory();
+	virtual void flushMemory() = 0;
 
 	// transfer initial information to players
-	virtual void zeroTurnPlay();
+	virtual void zeroTurnPlay() = 0;
 
 	// one turn for each players
-	virtual void oneTurnPlay();
+	virtual void oneTurnPlay() = 0;
 
 	// check for game end
+	// winner=0 : draw, winner=1 : player1 win, winner=2 : player2 win
 	// return : true for stage end, false for continue
-	virtual bool gameLogic(int &winner);
-}
+	virtual bool gameLogic(int &winner) = 0;
+
+	// string parseForToss(values) = 0;
+	// bool parseForGet(&values) = 0;
+};
+
+#endif

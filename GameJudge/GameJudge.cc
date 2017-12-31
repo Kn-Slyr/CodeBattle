@@ -1,6 +1,7 @@
 #include <string>
 #include <ctime>
 #include "GameJudge.h"
+#include "GameLogicForRSP.cc"
 
 using namespace std;
 
@@ -10,10 +11,11 @@ GameJudge::GameJudge(string player1, string player2)
 	srand(time(NULL));
 
 	player[0] = player1;
-	isAI[0] = player[1] == 'A';
+	isAI[0] = (player[1][0] == 'A');
 	player[1] = player2;
-	isAI[1] = player[2] == 'A';
+	isAI[1] = (player[2][0] == 'A');
 	winCount[0] = winCount[1] = 0;
+	stageNum = 1;
 }
 
 GameJudge::~GameJudge()
@@ -26,9 +28,10 @@ int GameJudge::mainGameLoop()
 {
 	for(int stg=0; stg<stageNum; stg++)
 	{
-		
-		gameLogic = new RockScissorPaper();
-		winCount[gameLogic.gamePlay()]++;
+		// in this term, execute other AI exe files
+		gameLogic = new RockScissorPaper(isAI[0], isAI[1]);
+		int tmpWinner = gameLogic->gamePlay();
+		if(tmpWinner) winCount[tmpWinner-1]++;
 		delete gameLogic;
 	}
 

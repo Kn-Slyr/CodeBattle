@@ -20,7 +20,7 @@ NamedPipe::~NamedPipe()
 		unlink(fifoName);
 }
 
-void NamedPipe::toss(string &msg)
+void NamedPipe::toss(string msg)
 {
 	if(write(fileDes, msg.c_str(), MSG_SIZE) == -1)
 	{
@@ -29,7 +29,7 @@ void NamedPipe::toss(string &msg)
 	}
 }
 
-void NamedPipe::get(string &msg)
+void NamedPipe::getMsg(string msg)
 {
 	char tmsg[80];
 	if((read(fileDes, tmsg, MSG_SIZE)) < 0)

@@ -4,14 +4,28 @@
 #define SCISSOR 1
 #define PAPER	2
 
-class RockScissorPaper : public gameLogic
+class RockScissorPaper : public GameLogic
 {
 private :
 	int stageNum, stageIdx;
 	int winCount[2];
-	const static WEAPON[3] = {"Rock", "Scissor", "Paper"};
+	static constexpr const char* WEAPON[3] =
+		{ "ROCK", "SCISSOR", "PAPER" };
 
 public :
+	RockScissorPaper(bool isAI1, bool isAI2)
+		: GameLogic(isAI1, isAI2)
+	{
+		allocMemory();
+		setGameInfo();
+	}
+
+	~RockScissorPaper()
+	{
+		flushMemory();
+	}
+
+private :
 	virtual void setGameInfo()
 	{
 		gameName = "RockScissorPaper";
@@ -48,13 +62,13 @@ public :
 		{
 			for(int player=0; player<2; player++)
 				if(isAI[player])
-					pipe[player]->toss("turn:0,");
+					pipe[player]->toss(string("turn:0,"));
 		}
 		else
 		{
 			for(int player=0; player<2; player++)
 				if(isAI[player])
-					pipe[player]->toss(parseForToss(player));
+					pipe[player]->toss(parseForToss(stageIdx, privateList[!player][stageIdx-1]));
 		}
 
 		// get data from AI
@@ -62,7 +76,7 @@ public :
 		{
 			if(isAI[player])
 			{
-				pipe[player]->get(msg);
+				pipe[player]->getMsg(msg);
 				parseForGet(msg, weapon);
 			}
 			else
@@ -107,18 +121,24 @@ public :
 	{
 		if(abs(winCount[0] - winCount[1]) > stageNum - stageIdx)
 		{
-			winner = winCount[0] > winCount[1] ? 0 : 1;
+			winner = winCount[0] > winCount[1] ? 1 : 2;
 			return true;
 		}
+		else if(stageNum == stageIdx && winCount[0] == winCount[1])
+		{
+			winner = 0;
+			return true;
+		}
+
 		return false;
 	}
 
 	// message's format is "turnCount,enemy's last weapon"
-	string parseForToss(int player)
+	string parseForToss(int stgIdx, int lastWeapon)
 	{
 		char msg[50];
 		snprintf(msg, sizeof(msg),
-			"%d,%d", stageIdx, privateList[!player][stageIdx-1])
+			"%d,%d", stgIdx, lastWeapon);
 		return string(msg);
 	}
 
@@ -131,4 +151,5 @@ public :
 			return false;
 		return true;
 	}
-}
+
+};

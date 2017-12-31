@@ -1,4 +1,5 @@
 #include <string>
+#include "GameLogic.h"
 
 class GameJudge
 {
@@ -8,6 +9,7 @@ private :
 	bool isAI[2];
 	GameLogic *gameLogic;
 	int winCount[2];
+	int stageNum;
 
 public :
 	GameJudge(string player1, string player2);
