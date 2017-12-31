@@ -1,5 +1,11 @@
+#include <cstdio>
 #include <string>
+#include <cstring>
+#include <sys/stat.h>		// mkfifo
+#include <fcntl.h>			// O_RDWR
+#include <unistd.h>			// unlink
 #define MODE 0666
+#define MSG_SIZE 80
 using namespace std;
 
 class NamedPipe

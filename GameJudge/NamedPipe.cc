@@ -1,12 +1,10 @@
-#include <cstdio>
-#include <cstring>
-#include <sys/stat.h>
-#define MSG_SIZE 80
+#include "NamedPipe.h"
 
 NamedPipe::NamedPipe(int playerNum, bool _isJudger)
 {
 	isJudger = _isJudger;
-	strcpy_s(fifoName, 11, "./fifo_AIX");
+	// strcpy_s(fifoName, 11, "./fifo_AIX");
+	strcpy(fifoName, "./fifo_AIX");
 	fifoName[9] = '0' + playerNum;
 
 	if((fileDes = open(fifoName, O_RDWR)) < 0)
@@ -34,7 +32,7 @@ void NamedPipe::toss(string &msg)
 void NamedPipe::get(string &msg)
 {
 	char tmsg[80];
-	if((read(filedes_AI2GM, tmsg, MSG_SIZE)) < 0)
+	if((read(fileDes, tmsg, MSG_SIZE)) < 0)
 	{
 		printf("Fail to read() for %s\n", fifoName);
 		exit(1);
