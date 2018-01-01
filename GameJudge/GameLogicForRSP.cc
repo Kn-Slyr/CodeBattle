@@ -4,7 +4,7 @@
 #define SCISSOR 1
 #define PAPER	2
 
-class RockScissorPaper : public GameLogic
+class LogicForRSP : public GameLogic
 {
 private :
 	int stageNum, stageIdx;
@@ -13,14 +13,14 @@ private :
 		{ "ROCK", "SCISSOR", "PAPER" };
 
 public :
-	RockScissorPaper(bool isAI1, bool isAI2)
+	LogicForRSP(bool isAI1, bool isAI2)
 		: GameLogic(isAI1, isAI2)
 	{
 		allocMemory();
 		setGameInfo();
 	}
 
-	~RockScissorPaper()
+	~LogicForRSP()
 	{
 		flushMemory();
 	}

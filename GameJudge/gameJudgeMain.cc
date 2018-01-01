@@ -4,10 +4,14 @@
 #include "GameJudge.h"
 using namespace std;
 
+// argv[1] = player1 name, argv[2] = player2 name
 int main(int argc, char *argv[])
 {
 	if(argc != 3)
+	{
 		cout<<"command error..."<<endl;
+		return 0;
+	}
 	GameJudge judge = GameJudge(argv[1], argv[2]);
 
 	int winner = judge.mainGameLoop();
@@ -15,5 +19,6 @@ int main(int argc, char *argv[])
 		cout<< "draw game!"<<endl;
 	else
 		cout<<"winner is " << argv[winner]<<endl;
+		
 	return 0;
 }

@@ -51,11 +51,12 @@ public :
 		while(true)
 		{
 			oneTurnPlay();
-			if(gameLogic(winner)) break;
+			if(gameLogic(winner))
+				break;
 		}
 		return winner;
 	}
-	
+
 private :
 	// initiate basic game data
 	virtual void setGameInfo() = 0;

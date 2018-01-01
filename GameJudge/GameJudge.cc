@@ -29,7 +29,7 @@ int GameJudge::mainGameLoop()
 	for(int stg=0; stg<stageNum; stg++)
 	{
 		// in this term, execute other AI exe files
-		gameLogic = new RockScissorPaper(isAI[0], isAI[1]);
+		gameLogic = new LogicForRSP(isAI[0], isAI[1]);	//@@todo
 		int tmpWinner = gameLogic->gamePlay();
 		if(tmpWinner) winCount[tmpWinner-1]++;
 		delete gameLogic;
