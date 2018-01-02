@@ -10,17 +10,17 @@ public :
 	}
 
 private :
-	virtual bool oneTurnPlay()
+	// virtual void *oneTurnPlay(void *pArgv)
+	virtual void oneTurnPlay()
 	{
-		// get message part
-		string msg;
 		int enemyLastWeapon;
-		pipe->getMsg(msg);
-		parseForGet(msg, enemyLastWeapon);
+		// int *check = (int*)pArgv;
+		parseForGet(pipeMsg, enemyLastWeapon);
 
 		int weaponChoice = userAILogic(enemyLastWeapon);
-		msg = parseForToss(weaponChoice);
-		pipe->toss(msg);
+		pipeMsg = parseForToss(weaponChoice);
+
+		// *check = 1;
 	}
 
 	// this is what user implement

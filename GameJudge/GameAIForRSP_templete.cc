@@ -11,6 +11,7 @@ public :
 	{
 		allocMemory();
 		setGameInfo();
+		setTimeChecker();
 	}
 
 private :
@@ -31,13 +32,19 @@ private :
 		// do nothing
 	}
 
+	virtual void setTimeChecker()
+	{
+		// timeChecker = new TimeChecker(2);
+	}
+
 	virtual void zeroTurnPlay()
 	{
 		// do nothing to initialize
 	}
 
 	// this function is what user have to implement
-	virtual bool oneTurnPlay() = 0;
+	// virtual void *oneTurnPlay(void *pArgv) = 0;
+	virtual void oneTurnPlay() = 0;
 
 protected :
 	string parseForToss(int choiceWeapon)
