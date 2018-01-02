@@ -2,8 +2,11 @@
 
 class AIForRSP_templete : public GameAI
 {
+private :
+	int stageNum;
+	int stageIdx;
 public :
-	AIForRSP(int playerNum)
+	AIForRSP_templete(int playerNum)
 		: GameAI(playerNum)
 	{
 		allocMemory();

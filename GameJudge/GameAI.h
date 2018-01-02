@@ -1,5 +1,8 @@
+#include <iostream>
 #include <string>
 #include "NamedPipe.h"
+
+using namespace std;
 
 class GameAI
 {
@@ -15,7 +18,7 @@ protected :
 	int **privateBoard;		// privateBoard[player][x][y]
 
 public :
-	GameLogic(int playerNum)
+	GameAI(int playerNum)
 	{
 		cout<<"\tLoad GameAI...\n"<<endl;
 
@@ -25,7 +28,7 @@ public :
 		readyToPlay();
 	}
 
-	~GameLogic()
+	~GameAI()
 	{
 		cout<<"\tClose GameAI...\n"<<endl;
 		delete pipe;

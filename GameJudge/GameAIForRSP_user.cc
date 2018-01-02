@@ -1,18 +1,25 @@
-#include "GameAIForRSP_templete.h"
+#include "GameAIForRSP_templete.cc"
 
 class GameAIForRSP : public AIForRSP_templete
 {
+public :
+	GameAIForRSP(int playerNum)
+		: AIForRSP_templete(playerNum)
+	{
+
+	}
+
 private :
 	virtual bool oneTurnPlay()
 	{
 		// get message part
 		string msg;
-		int enemylastWeapon;
+		int enemyLastWeapon;
 		pipe->getMsg(msg);
-		praseForGet(msg, enemyLastWeapon);
+		parseForGet(msg, enemyLastWeapon);
 
 		int weaponChoice = userAILogic(enemyLastWeapon);
-		msg = praseForToss(weaponChoice);
+		msg = parseForToss(weaponChoice);
 		pipe->toss(msg);
 	}
 

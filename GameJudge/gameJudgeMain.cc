@@ -1,5 +1,5 @@
 // compile for gameJudger
-// g++ -std=c++11 -o ./exe/gameJudge GameJudge.h GameJudge.cc GameLogic.h GameLogicForRSP.cc main.cc NamedPipe.h NamedPipe.cc
+// g++ -std=c++11 -o ./exe/gameJudge GameJudge.h GameJudge.cc GameLogic.h GameLogicForRSP.cc gameJudgeMain.cc NamedPipe.h NamedPipe.cc
 #include <iostream>
 #include "GameJudge.h"
 using namespace std;
@@ -19,6 +19,6 @@ int main(int argc, char *argv[])
 		cout<< "draw game!"<<endl;
 	else
 		cout<<"winner is " << argv[winner]<<endl;
-		
+
 	return 0;
 }
