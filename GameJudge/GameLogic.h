@@ -36,9 +36,6 @@ public :
 				pipe[player]->getMsg(tmp);	// wait for AI load
 				cout<<"AI"<<player+1<<" is ready!"<<endl;
 			}
-
-		//@@ is indeed?
-		this_thread::sleep_for(std::chrono::milliseconds(500));
 	}
 
 	~GameLogic()

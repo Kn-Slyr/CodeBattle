@@ -32,7 +32,7 @@ private :
 	virtual void setGameInfo()
 	{
 		gameName = "RockScissorPaper";
-		stageNum = 1000;
+		stageNum = 9;
 		stageIdx = 0;
 	}
 
@@ -136,9 +136,12 @@ private :
 			winner = winCount[0] > winCount[1] ? 1 : 2;
 			return true;
 		}
-		else if(stageNum == stageIdx && winCount[0] == winCount[1])
+		else if(stageNum == stageIdx)
 		{
-			winner = 0;
+			if(winCount[0] == winCount[1])
+				winner = 0;
+			else
+				winner = winCount[0] > winCount[1] ? 1 : 2;
 			return true;
 		}
 

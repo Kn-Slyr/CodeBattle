@@ -5,6 +5,7 @@ class AIForRSP_templete : public GameAI
 private :
 	int stageNum;
 	int stageIdx;
+
 public :
 	AIForRSP_templete(int playerNum)
 		: GameAI(playerNum)
