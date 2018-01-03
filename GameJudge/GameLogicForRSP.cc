@@ -1,8 +1,11 @@
+#include <iostream>
 #include <cstdlib>
 #include "GameLogic.h"
 #define ROCK 	0
 #define SCISSOR 1
 #define PAPER	2
+
+using namespace std;
 
 class LogicForRSP : public GameLogic
 {
@@ -49,7 +52,10 @@ private :
 
 	virtual void zeroTurnPlay()
 	{
-		// do nothing for this game
+		cout<<"zeroTurnPlay!"<<endl;
+		for(int player=0; player<2; player++)
+			if(isAI[player])
+				pipe[player]->toss("No mean for this game\n");
 	}
 
 	virtual void oneTurnPlay()
@@ -112,6 +118,12 @@ private :
 				tempWin = 1;
 		}
 
+		// @@debugging....
+		cout<<"turn "<<stageIdx<<" : "<<endl;
+		cout<<"p1 : "<<privateList[0][stageIdx]<<" vs "<<privateList[1][stageIdx]<<" : p2"<<endl;
+		if(tempWin== -1) cout<<"draw!"<<endl;
+		else cout<<"winner is "<<tempWin+1<<endl;
+
 		if(tempWin != -1)
 			winCount[tempWin]++;
 		stageIdx++;
@@ -146,7 +158,7 @@ private :
 	// 0 : rock, 1 : scissor, 2 : paper
 	bool parseForGet(string &msg, int &weapon)
 	{
-		weapon = msg[0] - '0';
+		weapon = msg[2] - '0';
 		if(weapon < 0 || weapon > 2)
 			return false;
 		return true;

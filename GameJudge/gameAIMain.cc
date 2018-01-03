@@ -4,7 +4,7 @@
 #include "GameAIForRSP_user.cc"
 using namespace std;
 
-// argv[2] = this AI's player num(1 or 2)
+// argv[2] = this AI's player num(0 or 1)
 // @@todo argv[3] = gameLogic for this AI
 int main(int argc, char *argv[])
 {

@@ -18,7 +18,7 @@ private :
 	virtual void setGameInfo()
 	{
 		gameName = "RockScissorPaper";
-		stageNum = 1000;
+		stageNum = 9;
 		stageIdx = 0;
 	}
 
@@ -34,12 +34,15 @@ private :
 
 	virtual void setTimeChecker()
 	{
+		timeLimit = 2;
 		// timeChecker = new TimeChecker(2);
 	}
 
 	virtual void zeroTurnPlay()
 	{
-		// do nothing to initialize
+		cout<<"\tzeroTurnPlay..."<<endl;
+		pipe->getMsg(pipeMsg);
+		cout<<"\tgetMsg:"<<pipeMsg<<endl;
 	}
 
 	// this function is what user have to implement

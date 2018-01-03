@@ -19,6 +19,7 @@ protected :
 	int timeLimit;
 	int myNumber;
 	int turnCount;
+	int isEnd;
 
 	// TimeChecker *timeChecker;
 	NamedPipe *pipe;
@@ -78,14 +79,15 @@ private :
 	// toss message to GameJudge and return true
 	bool oneTurnProcess()
 	{
+		cout<<"\tPlayer"<<myNumber<<"\'s turn!"<<endl;
 		// get message part
 		pipe->getMsg(pipeMsg);
-		if(pipeMsg.find("END") == 0)		// game set
+		if(pipeMsg.find("END") == 0)		// game set msg
 			return false;
 
 		// start threading for time limit check
 		// bool isClear = timeChecker->playThread(oneTurnPlay);
-		int isEnd = 0;
+		isEnd = 0;
 		pthread_t oneThread;
 
 		pthread_create(&oneThread, NULL, &GameAI::oneTurnPlay_wrapper, this);

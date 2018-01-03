@@ -1,12 +1,15 @@
 #include "GameAIForRSP_templete.cc"
 
+#include <cstdlib>
+#include <ctime>
+
 class GameAIForRSP : public AIForRSP_templete
 {
 public :
 	GameAIForRSP(int playerNum)
 		: AIForRSP_templete(playerNum)
 	{
-
+		srand(time(nullptr));
 	}
 
 private :
@@ -19,6 +22,7 @@ private :
 
 		int weaponChoice = userAILogic(enemyLastWeapon);
 		pipeMsg = parseForToss(weaponChoice);
+		isEnd = 1;
 
 		// *check = 1;
 	}
@@ -26,6 +30,8 @@ private :
 	// this is what user implement
 	int userAILogic(int enemyLastWeapon)
 	{
-		return 0;
+		int weapon = rand()%3;
+		cout<<"\tmy choice is "<<weapon<<endl;
+		return weapon;
 	}
 };

@@ -1,7 +1,9 @@
 #ifndef __GAME_LOGIC_H__
 #define __GAME_LOGIC_H__
 
-#include <cstdio>
+#include <iostream>
+#include <thread>
+#include <chrono>
 #include "NamedPipe.h"
 
 class GameLogic
@@ -20,7 +22,7 @@ protected :
 public :
 	GameLogic(bool isAI1, bool isAI2)
 	{
-		printf("Load GameLogic...\n");
+		cout<<"Load GameLogic..."<<endl;
 
 		isAI[0] = isAI1;
 		isAI[1] = isAI2;
@@ -32,7 +34,11 @@ public :
 				NamedPipe::makeFifoFile(player);
 				pipe[player] = new NamedPipe(player, true);
 				pipe[player]->getMsg(tmp);	// wait for AI load
+				cout<<"AI"<<player+1<<" is ready!"<<endl;
 			}
+
+		//@@ is indeed?
+		this_thread::sleep_for(std::chrono::milliseconds(500));
 	}
 
 	~GameLogic()
