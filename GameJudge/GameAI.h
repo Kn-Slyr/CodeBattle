@@ -13,13 +13,16 @@ using namespace std;
 
 class GameAI
 {
+private :
+	int usedTimeTotal;
+
 protected :
 	string gameName;
 	string pipeMsg;
 	int timeLimit;
 	int myNumber;
 	int turnCount;
-	int isEnd;
+	bool isFinishLogic;
 
 	// TimeChecker *timeChecker;
 	NamedPipe *pipe;
@@ -74,6 +77,9 @@ private :
 	// set initial info of game
 	virtual void zeroTurnPlay() = 0;
 
+	// valid check for user's choice
+	virtual bool isValidChoice() = 0;
+
 	// get message from GameJudge(if get game end message, return false)
 	// execute oneTurnPlay() = user's play
 	// toss message to GameJudge and return true
@@ -82,12 +88,12 @@ private :
 		cout<<"\tPlayer"<<myNumber<<"\'s turn!"<<endl;
 		// get message part
 		pipe->getMsg(pipeMsg);
-		if(pipeMsg.find("END") == 0)		// game set msg
-			return false;
+		if(hasGameEndSign())
+		 	return false;
+		parseForGet();
 
 		// start threading for time limit check
-		// bool isClear = timeChecker->playThread(oneTurnPlay);
-		isEnd = 0;
+		isFinishLogic = false;
 		pthread_t oneThread;
 
 		pthread_create(&oneThread, NULL, &GameAI::oneTurnPlay_wrapper, this);
@@ -95,10 +101,11 @@ private :
 		for(int i=0; i<timeLimit; i++)
 		{
 			this_thread::sleep_for(chrono::seconds(1));
-			if(isEnd > 1) break;
+			if(isFinishLogic) break;
 		}
 
-		if(!isEnd)
+		// if too late to finish or user's return is invalid
+		if(!isFinishLogic || !isValidChoice())
 		{
 			pthread_cancel(oneThread);
 			pipeMsg = "OVER";
@@ -106,6 +113,7 @@ private :
 			return false;
 		}
 
+		parseForToss();
 		pipe->toss(pipeMsg);
 		return true;
 	}
@@ -119,6 +127,24 @@ private :
 	{
 		reinterpret_cast<GameAI*>(object)->oneTurnPlay();
 		return 0;
+	}
+
+protected :
+	bool hasGameEndSign()
+	{
+		return pipeMsg.find("END") == 0;
+	}
+
+	// set pipeMsg by values in AIForXXX.cc
+	virtual void parseForToss() = 0;
+	// set values in AIForXXX.cc by pipeMsg
+	// if message has game end signal return false, else true
+	virtual void parseForGet() = 0;
+
+	// add ai's think time total
+	void usedTimeUpdate(int ms)
+	{
+		usedTimeTotal += ms;
 	}
 };
 

@@ -17,18 +17,14 @@ private :
 	virtual void oneTurnPlay()
 	{
 		int enemyLastWeapon;
-		// int *check = (int*)pArgv;
-		parseForGet(pipeMsg, enemyLastWeapon);
 
-		int weaponChoice = userAILogic(enemyLastWeapon);
-		pipeMsg = parseForToss(weaponChoice);
-		isEnd = 1;
-
-		// *check = 1;
+		choiceWeapon = userAILogic();
+		usedTimeUpdate(0);
+		isFinishLogic = true;
 	}
 
 	// this is what user implement
-	int userAILogic(int enemyLastWeapon)
+	int userAILogic()
 	{
 		int weapon = rand()%3;
 		cout<<"\tmy choice is "<<weapon<<endl;
