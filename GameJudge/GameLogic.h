@@ -9,7 +9,7 @@
 class GameLogic
 {
 protected :
-	std::string gameName;
+	string gameName;
 
 	int **privateList;		// privateList[player][idx]
 	int *commonList;		// commonList[idx]
@@ -18,6 +18,7 @@ protected :
 
 	bool isAI[2];
 	NamedPipe *pipe[2];
+	string pipeMsg;
 
 public :
 	GameLogic(bool isAI1, bool isAI2)

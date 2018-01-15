@@ -64,26 +64,25 @@ private :
 		int weapon, tempWin;
 
 		// toss data to AI
-		if(stageIdx == 0)
-		{
-			for(int player=0; player<2; player++)
-				if(isAI[player])
-					pipe[player]->toss(string("turn:0,"));
-		}
-		else
-		{
-			for(int player=0; player<2; player++)
-				if(isAI[player])
-					pipe[player]->toss(parseForToss(stageIdx, privateList[!player][stageIdx-1]));
-		}
+		for(int player=0; player<2; player++)
+			if(isAI[player])
+			{
+				if(stageIdx == 0)
+					pipe[player]->toss(string("0,0"));
+				else
+				{
+					parseForToss(stageIdx, privateList[!player][stageIdx-1]);
+					pipe[player]->toss(pipeMsg);
+				}
+			}
 
 		// get data from AI
 		for(int player=0; player<2; player++)
 		{
 			if(isAI[player])
 			{
-				pipe[player]->getMsg(msg);
-				parseForGet(msg, weapon);
+				pipe[player]->getMsg(pipeMsg);
+				parseForGet(weapon);
 			}
 			else
 			{
@@ -154,14 +153,15 @@ private :
 		char msg[50];
 		snprintf(msg, sizeof(msg),
 			"%d,%d", stgIdx, lastWeapon);
-		return string(msg);
+		pipeMsg = string(msg);
 	}
 
 	// this game's msg is only one char(0, 1, 2)
 	// 0 : rock, 1 : scissor, 2 : paper
-	bool parseForGet(string &msg, int &weapon)
+	bool parseForGet(int &weapon)
 	{
-		weapon = msg[2] - '0';
+		cout<<"msg is \""<<pipeMsg<<"\""<<endl;
+		weapon = pipeMsg[2] - '0';
 		if(weapon < 0 || weapon > 2)
 			return false;
 		return true;

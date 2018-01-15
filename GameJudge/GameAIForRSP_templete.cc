@@ -56,7 +56,7 @@ private :
 
 	virtual bool isValidChoice()
 	{
-		return choiceWeapon < 0 || choiceWeapon > 2;
+		return 0 <= choiceWeapon && choiceWeapon < 3;
 	}
 
 protected :
@@ -72,21 +72,24 @@ protected :
 	virtual void parseForGet()
 	{
 		// set enemyLastWeapon
+		cout<< "\tmessage is \""<<pipeMsg<<"\""<<endl;
 		 istringstream sstream = istringstream(pipeMsg);
 		 string tmp;
 		 for(int i=0; i<2 && sstream; i++)
 		 {
 			 sstream >> tmp;
+			 cout<<i<<" : " <<tmp<<endl;
 			 switch(i)
 			 {
 				case 0 :
 				 	break;
 				case 1 :
-					enemyLastWeapon = stoi(tmp);
+					enemyLastWeapon = tmp[0]-'0';
 					break;
 				default :
 					return;
 			 }
 		 }
+		 cout<<endl;
 	}
 };
