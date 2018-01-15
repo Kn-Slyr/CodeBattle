@@ -9,36 +9,31 @@ NamedPipe::NamedPipe(int playerNum, bool _isJudger)
 	strcpy(fifoName[GETTER], "./fifo_AIXForGet");
 	fifoName[GETTER][9] = '0' + playerNum;
 
-	// @@it have to open this order
+	int authFlag[2] = {O_WRONLY, O_RDONLY};
+
+	// it has to open this order
 	if(isJudger)
 	{
-		if((fileDes[TOSSER] = open(fifoName[TOSSER==isJudger], O_WRONLY)) < 0)
+		for(int who = TOSSER; who <= GETTER; who++)
 		{
-			printf("fail to open %s\n", fifoName[TOSSER==isJudger]);
-			exit(1);
-		}
-
-		if((fileDes[GETTER] = open(fifoName[GETTER==isJudger], O_RDONLY)) < 0)
-		{
-			printf("fail to open %s\n", fifoName[GETTER==isJudger]);
-			exit(1);
+			if((fileDes[who] = open(fifoName[who==isJudger], authFlag[who])) < 0)
+			{
+				printf("fail to open %s\n", fifoName[who==isJudger]);
+				exit(1);
+			}
 		}
 	}
 	else
 	{
-		if((fileDes[GETTER] = open(fifoName[GETTER==isJudger], O_RDONLY)) < 0)
+		for(int who = GETTER; who >= TOSSER; who--)
 		{
-			printf("fail to open %s\n", fifoName[GETTER==isJudger]);
-			exit(1);
-		}
-
-		if((fileDes[TOSSER] = open(fifoName[TOSSER==isJudger], O_WRONLY)) < 0)
-		{
-			printf("fail to open %s\n", fifoName[TOSSER==isJudger]);
-			exit(1);
+			if((fileDes[who] = open(fifoName[who==isJudger], authFlag[who])) < 0)
+			{
+				printf("fail to open %s\n", fifoName[who==isJudger]);
+				exit(1);
+			}
 		}
 	}
-
 
 	printf("pipe for player%d constructed\n", playerNum);
 }
@@ -70,4 +65,22 @@ void NamedPipe::getMsg(string &msg)
 		exit(1);
 	}
 	msg = string(tmsg);
+}
+
+void NamedPipe::getSplittedMsg(vector<string> &splittedMsg, const string &s, char delim)
+{
+	string originMsg;
+	getMsg(originMsg);
+
+	splittedMsg.clear();
+    split(originMsg, delim, back_inserter(splittedMsg));
+}
+
+template<typename Out>
+void NamedPipe::split(const string &originMsg, char delim, Out result)
+{
+	stringstream sstream = stringstream(originMsg);
+	string item;
+	while (std::getline(sstream, item, delim))
+		*(result++) = item;
 }
