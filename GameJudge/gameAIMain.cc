@@ -1,5 +1,5 @@
 // compile for gameAI
-// g++ -std=c++11 -o ./exe/gameAI GameAI.h GameAIForRSP_templete.cc GameAIForRSP_user.cc gameAIMain.cc NamedPipe.h NamedPipe.cc -pthread
+// g++ -std=c++11 -o ./exe/gameAI GameAI.h GameAIForRSP_templete.cc GameAIForRSP_user.cc gameAIMain.cc NamedPipe.h NamedPipe.cc MacroForPlay.h -pthread
 #include <iostream>
 #include "GameAIForRSP_user.cc"
 using namespace std;

@@ -1,17 +1,22 @@
 #include <iostream>
 #include <cstdlib>
 #include "GameLogic.h"
+
 #define ROCK 	0
 #define SCISSOR 1
 #define PAPER	2
 
 using namespace std;
 
+//
+//
+
 class LogicForRSP : public GameLogic
 {
 private :
-	int stageNum, stageIdx;
+	int stageNum, stageIdx, choiceWeapon;
 	int winCount[2];
+	int firstPlay;
 	static constexpr const char* WEAPON[3] =
 		{ "ROCK", "SCISSOR", "PAPER" };
 
@@ -34,64 +39,43 @@ private :
 		gameName = "RockScissorPaper";
 		stageNum = 9;
 		stageIdx = 0;
+
+		stageInit();
 	}
 
 	virtual void allocMemory()
 	{
 		privateList = new int*[2];
-		for(int i=0; i<2; i++)
-			privateList[i] = new int[1005];
+		for(int player=PLAYER0; player<playerNum; player++)
+			privateList[player] = new int[1005];
 	}
 
 	virtual void flushMemory()
 	{
-		for(int i=0; i<2; i++)
-			delete[] privateList[i];
+		for(int player=PLAYER0; player<playerNum; player++)
+			delete[] privateList[player];
 		delete[] privateList;
 	}
 
 	virtual void zeroTurnPlay()
 	{
 		cout<<"zeroTurnPlay!"<<endl;
-		for(int player=0; player<2; player++)
+		for(int player=PLAYER0; player<playerNum; player++)
 			if(isAI[player])
 				pipe[player]->toss("No mean for this game\n");
 	}
 
-	virtual void oneTurnPlay()
+	virtual void playGameLogic()
 	{
-		string msg;
-		int weapon, tempWin;
+		int tempWin;
+		cout<<"is real? in sub "<<whoTurn<<endl;
+		privateList[whoTurn][stageIdx] = choiceWeapon;
 
-		// toss data to AI
-		for(int player=0; player<2; player++)
-			if(isAI[player])
-			{
-				if(stageIdx == 0)
-					pipe[player]->toss(string("0,0"));
-				else
-				{
-					parseForToss(stageIdx, privateList[!player][stageIdx-1]);
-					pipe[player]->toss(pipeMsg);
-				}
-			}
-
-		// get data from AI
-		for(int player=0; player<2; player++)
-		{
-			if(isAI[player])
-			{
-				pipe[player]->getMsg(pipeMsg);
-				parseForGet(weapon);
-			}
-			else
-			{
-				printf("%dth Turn, player %d input : ", stageIdx, player+1);
-				scanf("%d", &weapon);
-			}
-
-			privateList[player][stageIdx] = weapon;
-		}
+		cout<<"turn info : "<<stageIdx<<" : " << whoTurn<<endl;
+		cout<<privateList[0][stageIdx]<<" : " <<privateList[1][stageIdx]<<endl;
+		// not ready for calc
+		if(privateList[0][stageIdx] == -1 || privateList[1][stageIdx] == -1)
+			return;
 
 		// judge for Rock vs Scissor vs Paper
 		tempWin = -1;
@@ -117,7 +101,6 @@ private :
 				tempWin = 1;
 		}
 
-		// @@debugging....
 		cout<<"turn "<<stageIdx<<" : "<<endl;
 		cout<<"p1 : "<<privateList[0][stageIdx]<<" vs "<<privateList[1][stageIdx]<<" : p2"<<endl;
 		if(tempWin== -1) cout<<"draw!"<<endl;
@@ -125,46 +108,65 @@ private :
 
 		if(tempWin != -1)
 			winCount[tempWin]++;
+
 		stageIdx++;
+		stageInit();
+		gameEndCheck();
 	}
 
-	virtual bool gameLogic(int &winner)
+	void gameEndCheck()
 	{
 		if(abs(winCount[0] - winCount[1]) > stageNum - stageIdx)
-		{
 			winner = winCount[0] > winCount[1] ? 1 : 2;
-			return true;
-		}
 		else if(stageNum == stageIdx)
 		{
 			if(winCount[0] == winCount[1])
 				winner = 0;
 			else
 				winner = winCount[0] > winCount[1] ? 1 : 2;
-			return true;
 		}
-
-		return false;
 	}
 
 	// message's format is "turnCount,enemy's last weapon"
-	string parseForToss(int stgIdx, int lastWeapon)
+	string msgForToss()
 	{
 		char msg[50];
-		snprintf(msg, sizeof(msg),
-			"%d,%d", stgIdx, lastWeapon);
-		pipeMsg = string(msg);
+		if(stageIdx)
+			snprintf(msg, sizeof(msg), "%d:%d", stageIdx, privateList[!whoTurn][stageIdx-1]);
+		else
+			snprintf(msg, sizeof(msg), "%d:%d", stageIdx, -1);
+		return string(msg);
 	}
 
 	// this game's msg is only one char(0, 1, 2)
 	// 0 : rock, 1 : scissor, 2 : paper
-	bool parseForGet(int &weapon)
+	virtual void parseForGet(vector<string> splittedMsg)
 	{
-		cout<<"msg is \""<<pipeMsg<<"\""<<endl;
-		weapon = pipeMsg[2] - '0';
-		if(weapon < 0 || weapon > 2)
-			return false;
-		return true;
+		/*
+		// normally use like this
+		int len = splittedMsg.size();
+		for(int i=0; i<len; i++)
+			switch(i)
+			{
+			case 0 :
+				break;
+			case 1 :
+				choiceWeapon = splittedMsg[1][0] - '0';
+				break;
+			}
+		*/
+		choiceWeapon = splittedMsg[1][0] - '0';
+		isValidMsg();
 	}
 
+	void stageInit()
+	{
+		privateList[0][stageIdx] = -1;
+		privateList[1][stageIdx] = -1;
+	}
+
+	virtual bool isValidMsg()
+	{
+		return true;
+	}
 };

@@ -7,6 +7,7 @@
 #include <thread>		// for this_thread::sleep_for
 #include <chrono>		// for chrono::seconds
 #include "NamedPipe.h"
+#include "MacroForPlay.h"
 // #include "TimeChecker.h"
 
 using namespace std;
@@ -105,10 +106,17 @@ private :
 		}
 
 		// if too late to finish or user's return is invalid
-		if(!isFinishLogic || !isValidChoice())
+		if(!isFinishLogic)
 		{
 			pthread_cancel(oneThread);
-			pipeMsg = "OVER";
+			pipeMsg = CodeReader::TIMEOVER;
+			pipe->toss(pipeMsg);
+			return false;
+		}
+
+		if(!isValidChoice())
+		{
+			pipeMsg = CodeReader::MISSPLAY;
 			pipe->toss(pipeMsg);
 			return false;
 		}
@@ -132,7 +140,7 @@ private :
 protected :
 	bool hasGameEndSign()
 	{
-		return pipeMsg.find("END") == 0;
+		return pipeMsg.find(CodeReader::GAMEOVER) == 0;
 	}
 
 	// set pipeMsg by values in AIForXXX.cc

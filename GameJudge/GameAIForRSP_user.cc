@@ -1,7 +1,7 @@
-#include "GameAIForRSP_templete.cc"
-
 #include <cstdlib>
 #include <ctime>
+
+#include "GameAIForRSP_templete.cc"
 
 class GameAIForRSP : public AIForRSP_templete
 {

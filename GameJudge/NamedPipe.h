@@ -25,16 +25,16 @@ private :
 	char fifoName[2][20];
 
 	template<typename Out>
-	void split(const std::string &s, char delim, Out result);
+	void split(const string &s, char delim, Out result);
 
 public :
 	NamedPipe(int playerNum, bool _isJudger);
 	~NamedPipe();
 	void toss(string msg);
 	void getMsg(string &msg);
-	void getSplittedMsg(vector<string> &splittedMsg, const string &s, char delim = ' ');
+	void getSplittedMsg(vector<string> &splittedMsg, char delim = ':');
 
-	// this function have to call before make new instance
+	// this function have to be called before make new instance
 	static void makeFifoFile(int playerNum)
 	{
 		char fifoName[2][20] = { "./fifo_AIXForToss", "./fifo_AIXForGet"};
@@ -55,24 +55,6 @@ public :
 			}
 		}
 	}
-	// static void makeFifoFile(int playerNum)
-	// {
-	// 	char fifoTossName[] = "./fifo_AIXForToss";
-	// 	char fifoGetName[] = "./fifo_AIXForGet";
-	// 	fifoTossName[9] = '0' + playerNum;
-	// 	fifoGetName[9] = '0' + playerNum;
-    //
-	// 	if(mkfifo(fifoTossName, MODE) == -1)
-	// 	{
-	// 		printf("fail to make fifo for AI%d\n", playerNum);
-	// 		exit(1);
-	// 	}
-	// 	else if(mkfifo(fifoGetName, MODE) == -1)
-	// 	{
-	// 		printf("fail to make fifo for AI%d\n", playerNum);
-	// 		exit(1);
-	// 	}
-	// }
 };
 
 #endif

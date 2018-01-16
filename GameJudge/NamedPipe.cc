@@ -67,7 +67,7 @@ void NamedPipe::getMsg(string &msg)
 	msg = string(tmsg);
 }
 
-void NamedPipe::getSplittedMsg(vector<string> &splittedMsg, const string &s, char delim)
+void NamedPipe::getSplittedMsg(vector<string> &splittedMsg, char delim)
 {
 	string originMsg;
 	getMsg(originMsg);

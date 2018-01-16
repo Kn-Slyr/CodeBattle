@@ -1,4 +1,3 @@
-#include <sstream>
 #include "GameAI.h"
 
 class AIForRSP_templete : public GameAI
@@ -64,7 +63,7 @@ protected :
 	virtual void parseForToss()
 	{
 		char msg[50];
-		snprintf(msg, sizeof(msg), "%d,%d", turnCount, choiceWeapon);
+		snprintf(msg, sizeof(msg), "%d:%d", turnCount, choiceWeapon);
 		pipeMsg = string(msg);
 	}
 
