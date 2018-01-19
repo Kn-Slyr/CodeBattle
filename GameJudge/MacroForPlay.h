@@ -16,10 +16,13 @@ namespace {
 		static const std::string TIMEOVER;
 		static const std::string MISSPLAY;
 		static const std::string GAMEOVER;
+		static const std::string NOMEAN;
 	};
 
 	const std::string CodeReader::TIMEOVER = "#TIMEOVER";
 	const std::string CodeReader::MISSPLAY = "#MISSPLAY";
 	const std::string CodeReader::GAMEOVER = "#GAMEOVER";
+	const std::string CodeReader::NOMEAN = "#NOMEAN";
+
 }
 #endif

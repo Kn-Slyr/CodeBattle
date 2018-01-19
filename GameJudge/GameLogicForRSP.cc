@@ -8,13 +8,10 @@
 
 using namespace std;
 
-//
-//
-
 class LogicForRSP : public GameLogic
 {
 private :
-	int stageNum, stageIdx, choiceWeapon;
+	int stageNum, choiceWeapon;
 	int winCount[2];
 	int firstPlay;
 	static constexpr const char* WEAPON[3] =
@@ -38,20 +35,19 @@ private :
 	{
 		gameName = "RockScissorPaper";
 		stageNum = 9;
-		stageIdx = 0;
-
-		stageInit();
 	}
 
 	virtual void allocMemory()
 	{
 		privateList = new int*[2];
+		int playerNum = getPlayerNum();
 		for(int player=PLAYER0; player<playerNum; player++)
 			privateList[player] = new int[1005];
 	}
 
 	virtual void flushMemory()
 	{
+		int playerNum = getPlayerNum();
 		for(int player=PLAYER0; player<playerNum; player++)
 			delete[] privateList[player];
 		delete[] privateList;
@@ -59,110 +55,115 @@ private :
 
 	virtual void zeroTurnPlay()
 	{
-		cout<<"zeroTurnPlay!"<<endl;
-		for(int player=PLAYER0; player<playerNum; player++)
-			if(isAI[player])
-				pipe[player]->toss("No mean for this game\n");
+		cout<<getWhoTurn()<<"\'s zeroTurnPlay!"<<endl;
 	}
 
 	virtual void playGameLogic()
 	{
 		int tempWin;
-		cout<<"is real? in sub "<<whoTurn<<endl;
-		privateList[whoTurn][stageIdx] = choiceWeapon;
+		const int turnCount = getTurnCount();
+		privateList[getWhoTurn()][turnCount] = choiceWeapon;
 
-		cout<<"turn info : "<<stageIdx<<" : " << whoTurn<<endl;
-		cout<<privateList[0][stageIdx]<<" : " <<privateList[1][stageIdx]<<endl;
+		cout<<"turn info : "<<turnCount<<" : " << getWhoTurn()<<endl;
+		cout<<privateList[0][turnCount]<<" : " <<privateList[1][turnCount]<<endl;
 		// not ready for calc
-		if(privateList[0][stageIdx] == -1 || privateList[1][stageIdx] == -1)
+		if(privateList[0][turnCount] == -1 || privateList[1][turnCount] == -1)
 			return;
 
 		// judge for Rock vs Scissor vs Paper
 		tempWin = -1;
-		if(privateList[0][stageIdx] == ROCK)
+		if(privateList[0][turnCount] == ROCK)
 		{
-			if(privateList[1][stageIdx] == SCISSOR)
+			if(privateList[1][turnCount] == SCISSOR)
 				tempWin = 0;
-			else if(privateList[1][stageIdx] == PAPER)
+			else if(privateList[1][turnCount] == PAPER)
 				tempWin = 1;
 		}
-		else if(privateList[0][stageIdx] == SCISSOR)
+		else if(privateList[0][turnCount] == SCISSOR)
 		{
-			if(privateList[1][stageIdx] == ROCK)
+			if(privateList[1][turnCount] == ROCK)
 				tempWin = 1;
-			else if(privateList[1][stageIdx] == PAPER)
+			else if(privateList[1][turnCount] == PAPER)
 				tempWin = 0;
 		}
-		else if(privateList[0][stageIdx] == PAPER)
+		else if(privateList[0][turnCount] == PAPER)
 		{
-			if(privateList[1][stageIdx] == ROCK)
+			if(privateList[1][turnCount] == ROCK)
 				tempWin = 0;
-			else if(privateList[1][stageIdx] == SCISSOR)
+			else if(privateList[1][turnCount] == SCISSOR)
 				tempWin = 1;
 		}
 
-		cout<<"turn "<<stageIdx<<" : "<<endl;
-		cout<<"p1 : "<<privateList[0][stageIdx]<<" vs "<<privateList[1][stageIdx]<<" : p2"<<endl;
+		cout<<"turn "<<turnCount<<" : "<<endl;
+		cout<<"p1 : "<<privateList[0][turnCount]<<" vs "<<privateList[1][turnCount]<<" : p2"<<endl;
 		if(tempWin== -1) cout<<"draw!"<<endl;
 		else cout<<"winner is "<<tempWin+1<<endl;
 
 		if(tempWin != -1)
 			winCount[tempWin]++;
 
-		stageIdx++;
-		stageInit();
-		gameEndCheck();
+		checkGameEnd();
 	}
 
-	void gameEndCheck()
+	virtual bool checkGameEnd()
 	{
-		if(abs(winCount[0] - winCount[1]) > stageNum - stageIdx)
-			winner = winCount[0] > winCount[1] ? 1 : 2;
-		else if(stageNum == stageIdx)
+		if(abs(winCount[0] - winCount[1]) > stageNum - getTurnCount())
+		{
+			setWinner(winCount[0] > winCount[1] ? 1 : 2);
+			return true;
+		}
+		else if(stageNum == getTurnCount())
 		{
 			if(winCount[0] == winCount[1])
-				winner = 0;
+				setWinner(0);
 			else
-				winner = winCount[0] > winCount[1] ? 1 : 2;
+				setWinner(winCount[0] > winCount[1] ? 1 : 2);
+			return true;
 		}
+
+
+		return false;
 	}
 
 	// message's format is "turnCount,enemy's last weapon"
-	string msgForToss()
+	virtual string makeMsgForToss()
 	{
 		char msg[50];
-		if(stageIdx)
-			snprintf(msg, sizeof(msg), "%d:%d", stageIdx, privateList[!whoTurn][stageIdx-1]);
-		else
-			snprintf(msg, sizeof(msg), "%d:%d", stageIdx, -1);
+		const int turnCount = getTurnCount();
+
+		if(turnCount > 0)
+			snprintf(msg, sizeof(msg), "%d:%d", turnCount, privateList[!getWhoTurn()][turnCount-1]);
+		else if(turnCount == -1)
+			return CodeReader::NOMEAN;
+		else if(turnCount == 0)
+			snprintf(msg, sizeof(msg), "%d:%d", turnCount, -1);
 		return string(msg);
 	}
 
 	// this game's msg is only one char(0, 1, 2)
 	// 0 : rock, 1 : scissor, 2 : paper
-	virtual void parseForGet(vector<string> splittedMsg)
+	virtual void parseForGet()
 	{
-		/*
 		// normally use like this
-		int len = splittedMsg.size();
+		int len = getSplittedMsg().size();
 		for(int i=0; i<len; i++)
+		{
+			string one = getSplittedMsg()[i];
 			switch(i)
 			{
 			case 0 :
 				break;
 			case 1 :
-				choiceWeapon = splittedMsg[1][0] - '0';
+				choiceWeapon = one[0] - '0';
 				break;
 			}
-		*/
-		choiceWeapon = splittedMsg[1][0] - '0';
-		isValidMsg();
+		}
 	}
 
-	void stageInit()
+	virtual void turnInit()
 	{
-		privateList[0][stageIdx] = -1;
-		privateList[1][stageIdx] = -1;
+		privateList[PLAYER0][getTurnCount()] = -1;
+		privateList[PLAYER1][getTurnCount()] = -1;
 	}
 
 	virtual bool isValidMsg()
